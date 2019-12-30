@@ -48,13 +48,7 @@ def fetch_training(db_loc="database/Western_Tweet_Data.sqlite3"):
             created_at,
             apparentTemperature,
             humidity,
-            precipIntensity,
-            precipProbability,
-            IFNULL(precipType ,'NoPrecip' ) as precipType,
-            pressure,
-            visibility,
-            windBearing,
-            windspeed
+            IFNULL(precipType ,'NoPrecip' ) as precipType
         FROM LondonWeather
         WHERE created_at < DATE('NOW','LOCALTIME')
             """

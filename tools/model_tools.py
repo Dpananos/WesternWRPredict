@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 import pickle
 
 from .data_tools import fetch_training
@@ -44,7 +44,7 @@ def FeatureEngineerTransformer():
         [("TimeFeatures", TimeFeatureExtractor(), "created_at"),
         #  ("HolidayFeatures", HolidayFeatureExtractor(), "created_at"),
          ("SpecialFeatures", SpecialDayFeatureExtractor(), "created_at"),
-         ("PrecipFeatures", OrdinalEncoder(categories=[["snow", "NoPrecip", "rain", "sleet"]]),["precipType"],)]
+         ("PrecipFeatures", OneHotEncoder(categories=[["snow", "NoPrecip", "rain", "sleet"]]),["precipType"],)]
          ,remainder="passthrough")
 
     return feature_engineer

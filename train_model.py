@@ -12,7 +12,6 @@ feature_engineer = FeatureEngineerTransformer()
 # Initialize model
 gbm_model = lgm.LGBMRegressor(
     n_estimators=1000,
-    objective="mean_absolute_error",
     learning_rate=0.01,
     boosting_type="gbdt",
     colsample_bytree=0.5)
@@ -27,6 +26,7 @@ model_pipe = Pipeline(
     ("model", gbm_model)])
 
 params = {
+    "model__objective": ['regression','poisson','quantile'],
     "model__reg_alpha": [0, 10, 25, 50, 100, 500],
     "model__reg_lambda": [0, 10, 25, 50, 100, 500],
     "model__max_depth": [10, 50, 100, None],

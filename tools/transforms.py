@@ -180,9 +180,10 @@ class SpecialDayFeatureExtractor(BaseEstimator, TransformerMixin):
                         'Fall Study Break End',
                         'Fall Classes End',
                         'Fall Exams Start',
-                        'Fall Exams End']
+                        'Fall Exams End',
+                        'Regular Day']
 
-        special_periods = ['Winter Exams','Fall Exams','Reading Week','Fall Study Break']
+        special_periods = ['Winter Exams','Fall Exams','Reading Week','Fall Study Break', 'Regular']
 
         with sqlite3.connect(self.db_con) as con:
             period_effects= pd.read_sql('select * from SpecialPeriods',con=con, parse_dates=['date'])
@@ -195,10 +196,11 @@ class SpecialDayFeatureExtractor(BaseEstimator, TransformerMixin):
 
         dates = dates.merge(period_effects, how = 'left').merge(lead_ups, how = 'left')
 
-        dates['period'] = pd.Categorical(dates.period, categories = special_periods).codes
-        dates['special_day'] = pd.Categorical(dates.special_day, categories=special_days).codes
+        dates['period'] = pd.Categorical(dates.period, categories = special_periods).fillna('Regular')
+        dates['special_day'] = pd.Categorical(dates.special_day, categories=special_days).fillna('Regular Day')
+        dates['days_until'] = dates.days_until.fillna(1)
         dates = dates.drop('date', axis = 'columns')
-        return dates
+        return pd.get_dummies(dates)
     
     def fit(self, *_):
         return self
